@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星栈 StarStack — 为 AI 和开发者打造的静态网站分发层</title>
+<meta name="description" content="星栈 StarStack：一键把 Claude Code、Codex、OpenClaw 生成的 HTML 站点发布到全球 5 节点 IPFS 集群。零配置、抗审查、多语言、永久在线。">
+<meta name="keywords" content="IPFS, static hosting, AI generated HTML, Claude Code, Codex, OpenClaw, decentralized web, CDN, StarStack, 星栈">
+<meta name="robots" content="index, follow">
+<meta name="author" content="StarStack">
+<link rel="canonical" href="https://starstack.store/">
+<meta property="og:title" content="星栈 StarStack — 为 AI 和开发者打造的静态网站分发层">
+<meta property="og:description" content="一键把 AI 生成的 HTML 站点发布到全球 5 节点 IPFS。零配置，永久在线。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://starstack.store/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="星栈 StarStack — AI 静态网站托管层">
+<meta name="twitter:description" content="一键把 Claude Code / Codex / OpenClaw 生成的 HTML 发布到全球 5 节点 IPFS。">
+<style>
+:root {
+  --bg: #0a0e27;
+  --bg-soft: #0f132e;
+  --card: #131836;
+  --card-hover: #1a2045;
+  --border: #1f2747;
+  --accent: #6c5ce7;
+  --accent-soft: rgba(108, 92, 231, 0.15);
+  --accent2: #00cec9;
+  --accent2-soft: rgba(0, 206, 201, 0.15);
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --green: #00b894;
+  --red: #e74c3c;
+  --yellow: #fdcb6e;
+  --radius: 12px;
+  --max-width: 1200px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: var(--accent2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(10, 14, 39, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  max-width: var(--max-width); margin: 0 auto;
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700;
+}
+.logo-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.logo-text { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.logo-sub { font-size: 12px; color: var(--muted); font-weight: 500; margin-left: 6px; padding-top: 4px; }
+.nav { display: flex; align-items: center; gap: 24px; }
+.nav a { color: var(--muted); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+.nav a:hover { color: var(--text); text-decoration: none; }
+.lang-switch {
+  display: flex; gap: 6px; background: var(--card); padding: 4px; border-radius: 20px; border: 1px solid var(--border);
+}
+.lang-switch button {
+  border: none; background: transparent; color: var(--muted); padding: 4px 12px; border-radius: 16px;
+  font-size: 12px; cursor: pointer; font-weight: 600; transition: all 0.2s;
+}
+.lang-switch button.active { background: var(--accent); color: #fff; }
+.lang-switch button:hover { color: var(--text); }
+
+/* Hero */
+.hero {
+  padding: 140px 24px 80px;
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 0%, rgba(108, 92, 231, 0.18) 0%, transparent 60%);
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent-soft); border: 1px solid rgba(108, 92, 231, 0.3);
+  color: var(--accent); padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 600; margin-bottom: 24px;
+}
+.hero h1 { font-size: 52px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; letter-spacing: -0.5px; }
+.hero h1 .gradient { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-desc { max-width: 680px; margin: 0 auto 32px; font-size: 18px; color: var(--muted); }
+.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 100px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: transform 0.15s, box-shadow 0.2s;
+}
+.btn:hover { transform: translateY(-1px); text-decoration: none; }
+.btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; box-shadow: 0 8px 24px rgba(108, 92, 231, 0.3); }
+.btn-primary:hover { box-shadow: 0 12px 32px rgba(108, 92, 231, 0.4); }
+.btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--card-hover); }
+
+/* Container */
+.container { max-width: var(--max-width); margin: 0 auto; padding: 60px 24px; }
+.section-title {
+  font-size: 32px; font-weight: 700; margin-bottom: 12px; text-align: center;
+}
+.section-subtitle { color: var(--muted); text-align: center; max-width: 600px; margin: 0 auto 40px; font-size: 16px; }
+
+/* Stats */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 60px;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center;
+}
+.stat-value { font-size: 34px; font-weight: 700; margin: 8px 0; }
+.stat-label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+.stat-card.green .stat-value { color: var(--green); }
+.stat-card.accent .stat-value { color: var(--accent); }
+.stat-card.cyan .stat-value { color: var(--accent2); }
+.stat-card.yellow .stat-value { color: var(--yellow); }
+
+/* Use cases */
+.usecase-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 60px;
+}
+.usecase-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.usecase-card:hover { background: var(--card-hover); border-color: var(--accent); }
+.usecase-icon { font-size: 36px; margin-bottom: 16px; }
+.usecase-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.usecase-card p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+/* Upload Section */
+.upload-panel {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 60px;
+}
+.upload-tabs {
+  display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+}
+.upload-tab {
+  padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--muted); border: none; background: transparent;
+}
+.upload-tab.active { background: var(--accent-soft); color: var(--accent); }
+.upload-tab:hover { color: var(--text); }
+.upload-box {
+  background: var(--bg-soft); border: 2px dashed var(--border); border-radius: var(--radius); padding: 48px; text-align: center; cursor: pointer; transition: border-color 0.3s, background 0.3s;
+}
+.upload-box:hover { border-color: var(--accent); background: rgba(108, 92, 231, 0.05); }
+.upload-box.dragover { border-color: var(--accent2); background: var(--accent2-soft); }
+.upload-icon { font-size: 48px; margin-bottom: 16px; }
+.upload-text { font-size: 18px; margin-bottom: 10px; font-weight: 600; }
+.upload-hint { color: var(--muted); font-size: 14px; }
+.site-input {
+  width: 100%; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 16px;
+  color: var(--text); font-family: monospace; font-size: 14px; resize: vertical; min-height: 200px; outline: none;
+}
+.site-input:focus { border-color: var(--accent); }
+.site-input::placeholder { color: #475569; }
+.upload-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 16px; }
+.upload-result {
+  display: none; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-top: 20px; font-family: monospace; font-size: 13px; word-break: break-all;
+}
+.upload-result.show { display: block; }
+
+/* Cluster */
+.nodes-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 60px;
+}
+.node-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: border-color 0.2s;
+}
+.node-card:hover { border-color: var(--accent); }
+.node-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.node-name { font-size: 16px; font-weight: 600; }
+.node-flag { font-size: 24px; }
+.node-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.node-status.online { background: rgba(0, 184, 148, 0.15); color: var(--green); }
+.node-status.offline { background: rgba(231, 76, 60, 0.15); color: var(--red); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.node-info { font-size: 13px; color: var(--muted); line-height: 1.8; }
+.node-info span { color: var(--text); }
+
+/* API */
+.api-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 60px; }
+.api-endpoint { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.api-endpoint:last-child { border-bottom: none; }
+.method { padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; font-family: monospace; min-width: 64px; text-align: center; }
+.method.GET { background: rgba(0, 184, 148, 0.2); color: var(--green); }
+.method.POST { background: rgba(108, 92, 231, 0.2); color: var(--accent); }
+.path { font-family: monospace; font-size: 14px; color: var(--accent2); }
+.desc { color: var(--muted); font-size: 13px; margin-left: auto; }
+.code-block { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 13px; overflow-x: auto; color: #cbd5e1; margin-top: 12px; }
+.code-block .comment { color: var(--muted); }
+.code-block .keyword { color: #c678dd; }
+.code-block .string { color: #98c379; }
+
+/* Footer */
+.footer { text-align: center; padding: 40px 24px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); }
+.footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 12px; }
+.footer-links a { color: var(--muted); }
+.footer-links a:hover { color: var(--text); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 34px; }
+  .hero-desc { font-size: 16px; }
+  .nav { display: none; }
+  .section-title { font-size: 26px; }
+  .upload-actions { flex-direction: column; }
+  .upload-actions .btn { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">⭐</div>
+      <span class="logo-text">StarStack</span>
+      <span class="logo-sub">星栈</span>
+    </div>
+    <nav class="nav">
+      <a href="#why" data-i18n="nav_why">场景</a>
+      <a href="#upload" data-i18n="nav_upload">发布</a>
+      <a href="#cluster" data-i18n="nav_cluster">节点</a>
+      <a href="#api" data-i18n="nav_api">API</a>
+    </nav>
+    <div class="lang-switch">
+      <button class="active" data-lang="zh" title="中文">中</button>
+      <button data-lang="en" title="English">EN</button>
+      <button data-lang="ja" title="日本語">日</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">
+    <span>🌍</span> <span data-i18n="hero_badge">5 节点 IPFS 集群 · 亚洲 + 美洲</span>
+  </div>
+  <h1>
+    <span data-i18n="hero_title_1">把 AI 生成的 HTML</span><br>
+    <span class="gradient" data-i18n="hero_title_2">一键发布到全球</span>
+  </h1>
+  <p class="hero-desc" data-i18n="hero_desc">
+    星栈 StarStack 是面向 Claude Code、Codex、OpenClaw 等 AI 编程工具的静态网站分发层。无需服务器、无需配置，HTML 文件直接上传到 IPFS 全球节点，秒级可用、永久在线。
+  </p>
+  <div class="hero-actions">
+    <a href="#upload" class="btn btn-primary" data-i18n="hero_cta_primary">🚀 立即发布站点</a>
+    <a href="#api" class="btn btn-secondary" data-i18n="hero_cta_secondary">查看 API 文档</a>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- Stats -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card green">
+      <div class="stat-label" data-i18n="stat_nodes">集群节点</div>
+      <div class="stat-value" id="nodeCount">-</div>
+    </div>
+    <div class="stat-card accent">
+      <div class="stat-label" data-i18n="stat_pins">已固定文件</div>
+      <div class="stat-value" id="pinCount">-</div>
+    </div>
+    <div class="stat-card cyan">
+      <div class="stat-label" data-i18n="stat_regions">覆盖区域</div>
+      <div class="stat-value" style="font-size:24px">5</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-label" data-i18n="stat_storage">已用存储</div>
+      <div class="stat-value" id="storageUsed" style="font-size:22px">-</div>
+    </div>
+  </div>
+
+  <!-- Why -->
+  <section id="why">
+    <h2 class="section-title" data-i18n="why_title">为什么 AI 开发者需要星栈？</h2>
+    <p class="section-subtitle" data-i18n="why_subtitle">
+      每天生成大量 HTML 页面，传统部署流程太慢。星栈把发布简化到一次拖拽或一个 API 调用。
+    </p>
+    <div class="usecase-grid">
+      <div class="usecase-card">
+        <div class="usecase-icon">🤖</div>
+        <h3 data-i18n="usecase_1_title">AI 生成的页面</h3>
+        <p data-i18n="usecase_1_desc">Claude Code、Codex、OpenClaw 产出的 HTML 直接上传，秒得全球可访问 URL。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">🚀</div>
+        <h3 data-i18n="usecase_2_title">一键发布</h3>
+        <p data-i18n="usecase_2_desc">不用买服务器、配域名、设 CDN。拖拽文件或粘贴 HTML，自动分发到 5 节点集群。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">🌐</div>
+        <h3 data-i18n="usecase_3_title">全球就近访问</h3>
+        <p data-i18n="usecase_3_desc">新加坡、东京、首尔、曼谷、美国 5 节点分布，亚洲用户优先命中亚洲节点。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">♾️</div>
+        <h3 data-i18n="usecase_4_title">内容寻址</h3>
+        <p data-i18n="usecase_4_desc">基于 IPFS CID，文件不可篡改。更新站点即更新 CID，天然支持版本回滚。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">🛡️</div>
+        <h3 data-i18n="usecase_5_title">抗审查与高可用</h3>
+        <p data-i18n="usecase_5_desc">单节点故障不影响访问，数据由多个节点共同保存，无需担心服务器被墙。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">📦</div>
+        <h3 data-i18n="usecase_6_title">APK / 资源托管</h3>
+        <p data-i18n="usecase_6_desc">不仅支持 HTML 站点，也支持 APK、DMG、图片、JSON 等静态资源分发。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upload -->
+  <section id="upload">
+    <h2 class="section-title" data-i18n="upload_title">发布你的站点</h2>
+    <p class="section-subtitle" data-i18n="upload_subtitle">
+      选择文件上传，或直接把 HTML 代码粘贴到下方。上传完成后会立即获得全球可访问的 Gateway 链接。
+    </p>
+    <div class="upload-panel">
+      <div class="upload-tabs">
+        <button class="upload-tab active" data-tab="file" data-i18n="tab_file">📁 文件上传</button>
+        <button class="upload-tab" data-tab="html" data-i18n="tab_html">📝 粘贴 HTML</button>
+      </div>
+
+      <div class="upload-area" id="fileArea">
+        <div class="upload-box" id="uploadBox">
+          <div class="upload-icon">📁</div>
+          <div class="upload-text" data-i18n="upload_box_text">点击或拖拽文件到此处上传</div>
+          <div class="upload-hint" data-i18n="upload_box_hint">支持 HTML / CSS / JS / APK / 图片 · 最大 200MB</div>
+          <input type="file" id="fileInput" style="display:none">
+        </div>
+      </div>
+
+      <div class="upload-area" id="htmlArea" style="display:none">
+        <textarea class="site-input" id="htmlInput" placeholder="<!DOCTYPE html>..." data-i18n-placeholder="html_placeholder"></textarea>
+        <div class="upload-actions">
+          <button class="btn btn-secondary" id="clearHtml" data-i18n="btn_clear">清空</button>
+          <button class="btn btn-primary" id="uploadHtml" data-i18n="btn_publish_html">🚀 发布 HTML 站点</button>
+        </div>
+      </div>
+
+      <div class="upload-result" id="uploadResult"></div>
+    </div>
+  </section>
+
+  <!-- Cluster -->
+  <section id="cluster">
+    <h2 class="section-title" data-i18n="cluster_title">全球节点状态</h2>
+    <p class="section-subtitle" data-i18n="cluster_subtitle">
+      星栈 5 节点 IPFS Cluster 实时状态。每个节点都保存完整文件副本，确保高可用。
+    </p>
+    <div class="nodes-grid" id="nodesGrid">
+      <div class="node-card"><div class="node-info" data-i18n="loading">加载中...</div></div>
+    </div>
+  </section>
+
+  <!-- API -->
+  <section id="api">
+    <h2 class="section-title" data-i18n="api_title">API 与 AI 工作流</h2>
+    <p class="section-subtitle" data-i18n="api_subtitle">
+      一次 curl 即可发布。适合把星栈集成到 AI 编程、CI/CD 或脚本自动化中。
+    </p>
+    <div class="api-section">
+      <div class="api-endpoint">
+        <div class="method POST">POST</div>
+        <div class="path">/api/ipfs-upload</div>
+        <div class="desc" data-i18n="api_upload_desc">上传文件到 IPFS</div>
+      </div>
+      <div class="api-endpoint">
+        <div class="method GET"></div>
+        <div class="path">/ipfs/&lt;CID&gt;</div>
+        <div class="desc" data-i18n="api_gateway_desc">IPFS Gateway 访问</div>
+      </div>
+      <div class="api-endpoint">
+        <div class="method GET">GET</div>
+        <div class="path">/api/ipfs-health</div>
+        <div class="desc" data-i18n="api_health_desc">健康检查</div>
+      </div>
+      <div class="api-endpoint">
+        <div class="method GET">GET</div>
+        <div class="path">/api/pins</div>
+        <div class="desc" data-i18n="api_pins_desc">列出已固定文件</div>
+      </div>
+      <div class="api-endpoint">
+        <div class="method GET">GET</div>
+        <div class="path">/api/cluster/peers</div>
+        <div class="desc" data-i18n="api_peers_desc">查看集群节点</div>
+      </div>
+    </div>
+
+    <div class="api-section">
+      <div style="font-weight:600;margin-bottom:12px" data-i18n="code_title">Claude Code / Codex 集成示例</div>
+      <div class="code-block">
+# <span class="comment">一键发布 HTML 文件到星栈</span><br>
+curl -X POST <span class="string">"https://starstack.store/api/ipfs-upload"</span> \
+  -F <span class="string">"file=@index.html"</span> | python3 -m json.tool<br><br>
+# <span class="comment">返回示例：{"gateway":"https://starstack.store/ipfs/Qm..."}</span><br>
+# <span class="comment">然后用浏览器访问 https://starstack.store/ipfs/Qm...</span>
+      </div>
+      <div class="code-block" style="margin-top:12px">
+<span class="comment">// JavaScript: 在 AI 生成的页面里直接上传</span><br>
+<span class="keyword">const</span> form = <span class="keyword">new</span> FormData();<br>
+form.append(<span class="string">'file'</span>, <span class="keyword">new</span> Blob([htmlString], {type: <span class="string">'text/html'</span>}), <span class="string">'index.html'</span>);<br>
+<span class="keyword">const</span> res = <span class="keyword">await</span> fetch(<span class="string">'https://starstack.store/api/ipfs-upload'</span>, {<br>
+  method: <span class="string">'POST'</span>, body: form<br>
+});<br>
+<span class="keyword">const</span> { gateway } = <span class="keyword">await</span> res.json();<br>
+console.log(<span class="string">'Published:'</span>, gateway);
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="https://github.com/zhulianxing/starstack" target="_blank">GitHub</a>
+    <a href="https://starstack.store/api/ipfs-health">Health</a>
+    <a href="https://clawclaw.tech">ClawClaw</a>
+    <a href="https://daix.fun">DAIX.fun</a>
+  </div>
+  <span data-i18n="footer">StarStack 星栈 · 5 节点 IPFS Cluster · 为 AI 与开发者构建</span>
+</footer>
+
+<script>
+const API = location.origin;
+
+const i18n = {
+  zh: {
+    nav_why: '场景', nav_upload: '发布', nav_cluster: '节点', nav_api: 'API',
+    hero_badge: '5 节点 IPFS 集群 · 亚洲 + 美洲',
+    hero_title_1: '把 AI 生成的 HTML', hero_title_2: '一键发布到全球',
+    hero_desc: '星栈 StarStack 是面向 Claude Code、Codex、OpenClaw 等 AI 编程工具的静态网站分发层。无需服务器、无需配置，HTML 文件直接上传到 IPFS 全球节点，秒级可用、永久在线。',
+    hero_cta_primary: '🚀 立即发布站点', hero_cta_secondary: '查看 API 文档',
+    stat_nodes: '集群节点', stat_pins: '已固定文件', stat_regions: '覆盖区域', stat_storage: '已用存储',
+    why_title: '为什么 AI 开发者需要星栈？',
+    why_subtitle: '每天生成大量 HTML 页面，传统部署流程太慢。星栈把发布简化到一次拖拽或一个 API 调用。',
+    usecase_1_title: 'AI 生成的页面', usecase_1_desc: 'Claude Code、Codex、OpenClaw 产出的 HTML 直接上传，秒得全球可访问 URL。',
+    usecase_2_title: '一键发布', usecase_2_desc: '不用买服务器、配域名、设 CDN。拖拽文件或粘贴 HTML，自动分发到 5 节点集群。',
+    usecase_3_title: '全球就近访问', usecase_3_desc: '新加坡、东京、首尔、曼谷、美国 5 节点分布，亚洲用户优先命中亚洲节点。',
+    usecase_4_title: '内容寻址', usecase_4_desc: '基于 IPFS CID，文件不可篡改。更新站点即更新 CID，天然支持版本回滚。',
+    usecase_5_title: '抗审查与高可用', usecase_5_desc: '单节点故障不影响访问，数据由多个节点共同保存，无需担心服务器被墙。',
+    usecase_6_title: 'APK / 资源托管', usecase_6_desc: '不仅支持 HTML 站点，也支持 APK、DMG、图片、JSON 等静态资源分发。',
+    upload_title: '发布你的站点', upload_subtitle: '选择文件上传，或直接把 HTML 代码粘贴到下方。上传完成后会立即获得全球可访问的 Gateway 链接。',
+    tab_file: '📁 文件上传', tab_html: '📝 粘贴 HTML',
+    upload_box_text: '点击或拖拽文件到此处上传', upload_box_hint: '支持 HTML / CSS / JS / APK / 图片 · 最大 200MB',
+    btn_clear: '清空', btn_publish_html: '🚀 发布 HTML 站点',
+    html_placeholder: '<!DOCTYPE html>\n<html>...</html>',
+    cluster_title: '全球节点状态', cluster_subtitle: '星栈 5 节点 IPFS Cluster 实时状态。每个节点都保存完整文件副本，确保高可用。',
+    api_title: 'API 与 AI 工作流', api_subtitle: '一次 curl 即可发布。适合把星栈集成到 AI 编程、CI/CD 或脚本自动化中。',
+    api_upload_desc: '上传文件到 IPFS', api_gateway_desc: 'IPFS Gateway 访问', api_health_desc: '健康检查', api_pins_desc: '列出已固定文件', api_peers_desc: '查看集群节点',
+    code_title: 'Claude Code / Codex 集成示例',
+    footer: 'StarStack 星栈 · 5 节点 IPFS Cluster · 为 AI 与开发者构建',
+    loading: '加载中...', result_cid: 'CID', result_size: '大小', result_pinned: '已固定', result_total_pins: '总副本', result_gateway: '访问链接', result_copy: '复制'
+  },
+  en: {
+    nav_why: 'Use Cases', nav_upload: 'Publish', nav_cluster: 'Nodes', nav_api: 'API',
+    hero_badge: '5-Node IPFS Cluster · Asia + Americas',
+    hero_title_1: 'Publish AI-generated HTML', hero_title_2: 'to the world in one click',
+    hero_desc: 'StarStack is a static-site distribution layer for AI coding tools like Claude Code, Codex, and OpenClaw. No server, no config — upload HTML straight to a global IPFS cluster and get a worldwide URL in seconds.',
+    hero_cta_primary: '🚀 Publish Now', hero_cta_secondary: 'API Docs',
+    stat_nodes: 'Cluster Nodes', stat_pins: 'Pinned Files', stat_regions: 'Regions', stat_storage: 'Storage Used',
+    why_title: 'Why do AI developers need StarStack?',
+    why_subtitle: 'You generate HTML pages every day. Traditional deployment is too slow. StarStack reduces publishing to one drag or one API call.',
+    usecase_1_title: 'AI-generated pages', usecase_1_desc: 'Upload HTML from Claude Code, Codex, or OpenClaw and get a globally accessible URL instantly.',
+    usecase_2_title: 'One-click publish', usecase_2_desc: 'No servers, domains, or CDN setup. Drag files or paste HTML and we distribute to 5 nodes.',
+    usecase_3_title: 'Global edge access', usecase_3_desc: 'Nodes in Singapore, Tokyo, Seoul, Bangkok and the US. Asian users hit Asian nodes first.',
+    usecase_4_title: 'Content addressing', usecase_4_desc: 'IPFS CID means immutable content. Update the site, get a new CID, and keep every version.',
+    usecase_5_title: 'Censorship-resistant & HA', usecase_5_desc: 'One node down does not break access. Your files are replicated across the cluster.',
+    usecase_6_title: 'APK & asset hosting', usecase_6_desc: 'Not just HTML — also host APK, DMG, images, JSON and any static asset.',
+    upload_title: 'Publish your site', upload_subtitle: 'Upload a file or paste HTML below. Get a global Gateway URL immediately after upload.',
+    tab_file: '📁 File Upload', tab_html: '📝 Paste HTML',
+    upload_box_text: 'Click or drag file here', upload_box_hint: 'HTML / CSS / JS / APK / images · Max 200MB',
+    btn_clear: 'Clear', btn_publish_html: '🚀 Publish HTML Site',
+    html_placeholder: '<!DOCTYPE html>\n<html>...</html>',
+    cluster_title: 'Global Node Status', cluster_subtitle: 'Real-time status of the StarStack 5-node IPFS Cluster. Every node holds full replicas for high availability.',
+    api_title: 'API & AI Workflow', api_subtitle: 'One curl to publish. Integrate StarStack into AI coding, CI/CD, or any automation script.',
+    api_upload_desc: 'Upload file to IPFS', api_gateway_desc: 'IPFS Gateway access', api_health_desc: 'Health check', api_pins_desc: 'List pinned files', api_peers_desc: 'View cluster peers',
+    code_title: 'Claude Code / Codex Integration Example',
+    footer: 'StarStack · 5-Node IPFS Cluster · Built for AI and developers',
+    loading: 'Loading...', result_cid: 'CID', result_size: 'Size', result_pinned: 'Pinned', result_total_pins: 'Total pins', result_gateway: 'Gateway', result_copy: 'Copy'
+  },
+  ja: {
+    nav_why: '活用例', nav_upload: '公開', nav_cluster: 'ノード', nav_api: 'API',
+    hero_badge: '5ノード IPFS クラスタ · アジア + 北米',
+    hero_title_1: 'AI が生成した HTML を', hero_title_2: 'ワンクリックで世界へ',
+    hero_desc: 'StarStack（星栈）は、Claude Code、Codex、OpenClaw などの AI コーディングツール向けの静的サイト配信レイヤーです。サーバーや設定不要で、HTML をグローバル IPFS クラスタにアップロードし、数秒で世界中からアクセスできる URL を取得できます。',
+    hero_cta_primary: '🚀 今すぐ公開', hero_cta_secondary: 'API ドキュメント',
+    stat_nodes: 'クラスタノード', stat_pins: 'ピン留めファイル', stat_regions: 'カバー地域', stat_storage: '使用ストレージ',
+    why_title: 'なぜ AI 開発者に StarStack が必要か？',
+    why_subtitle: '毎日多くの HTML ページを生成します。従来のデプロイは遅すぎます。StarStack はドラッグ＆ドロップまたは 1 回の API 呼び出しで公開を完了します。',
+    usecase_1_title: 'AI 生成ページ', usecase_1_desc: 'Claude Code、Codex、OpenClaw の出力をそのままアップロード。即座にグローバル URL を取得。',
+    usecase_2_title: 'ワンクリック公開', usecase_2_desc: 'サーバー、ドメイン、CDN の設定は不要。ファイルをドラッグするか HTML を貼り付けるだけで 5 ノードに配信。',
+    usecase_3_title: 'グローバルエッジアクセス', usecase_3_desc: 'シンガポール、東京、ソウル、バンコク、米国の 5 ノード。アジアユーザーはアジアノードから優先配信。',
+    usecase_4_title: 'コンテンツアドレッシング', usecase_4_desc: 'IPFS CID により改ざん不可。サイト更新で新しい CID が発行され、バージョン管理にも最適。',
+    usecase_5_title: '検閲耐性と高可用性', usecase_6_title: 'APK / リソースホスティング', usecase_6_desc: 'HTML だけでなく、APK、DMG、画像、JSON など静的アセットの配信も可能。',
+    usecase_5_desc: '1 ノードが落ちてもアクセス継続。データは複数ノードで複製保存されます。',
+    upload_title: 'サイトを公開する', upload_subtitle: 'ファイルをアップロードするか、下に HTML を貼り付けてください。アップロード完了後すぐにグローバル Gateway URL を取得できます。',
+    tab_file: '📁 ファイルアップロード', tab_html: '📝 HTML を貼り付け',
+    upload_box_text: 'クリックまたはドラッグ＆ドロップでアップロード', upload_box_hint: 'HTML / CSS / JS / APK / 画像 · 最大 200MB',
+    btn_clear: 'クリア', btn_publish_html: '🚀 HTML サイトを公開',
+    html_placeholder: '<!DOCTYPE html>\n<html>...</html>',
+    cluster_title: 'グローバルノード状態', cluster_subtitle: 'StarStack 5 ノード IPFS クラスタのリアルタイム状態。高可用性のため、各ノードが完全なファイルコピーを保持します。',
+    api_title: 'API と AI ワークフロー', api_subtitle: '1 回の curl で公開。StarStack を AI コーディング、CI/CD、または自動化スクリプトに統合できます。',
+    api_upload_desc: 'IPFS にファイルをアップロード', api_gateway_desc: 'IPFS Gateway アクセス', api_health_desc: '健全性確認', api_pins_desc: 'ピン留めファイル一覧', api_peers_desc: 'クラスタピア一覧',
+    code_title: 'Claude Code / Codex 統合例',
+    footer: 'StarStack 星栈 · 5 ノード IPFS クラスタ · AI と開発者のために構築',
+    loading: '読み込み中...', result_cid: 'CID', result_size: 'サイズ', result_pinned: 'ピン留め済み', result_total_pins: '総ピン数', result_gateway: 'Gateway', result_copy: 'コピー'
+  }
+};
+
+let currentLang = 'zh';
+function setLanguage(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang === 'ja' ? 'ja' : 'en';
+  document.querySelectorAll('.lang-switch button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  const t = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (t[key]) el.placeholder = t[key];
+  });
+  localStorage.setItem('starstack_lang', lang);
+}
+
+// Load saved language
+const savedLang = localStorage.getItem('starstack_lang');
+if (savedLang && i18n[savedLang]) setLanguage(savedLang);
+
+document.querySelectorAll('.lang-switch button').forEach(btn => {
+  btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+});
+
+const nodeMap = {
+  'VM-0-2-opencloudos': { name: 'Singapore', flag: '🇸🇬', role: 'Leader' },
+  'VM-0-7-opencloudos': { name: 'United States', flag: '🇺🇸', role: 'Follower + API' },
+  'VM-0-8-opencloudos': { name: 'Tokyo', flag: '🇯🇵', role: 'Follower' },
+  'VM-0-16-opencloudos': { name: 'Seoul', flag: '🇰🇷', role: 'Follower' },
+  'VM-0-17-opencloudos': { name: 'Bangkok', flag: '🇹🇭', role: 'Follower' }
+};
+
+async function loadHealth() {
+  try {
+    const r = await fetch(API + '/api/ipfs-health');
+    await r.json();
+  } catch(e) {}
+}
+
+async function loadPins() {
+  try {
+    const r = await fetch(API + '/api/pins');
+    const pins = await r.json();
+    document.getElementById('pinCount').textContent = pins.length || 0;
+  } catch(e) {
+    document.getElementById('pinCount').textContent = '?';
+  }
+}
+
+async function loadCluster() {
+  try {
+    const r = await fetch(API + '/api/cluster/peers', { headers: { 'Accept': 'application/json' }});
+    const text = await r.text();
+    let peers = [];
+    try { peers = JSON.parse(text); } catch(e) {
+      const lines = text.split('\n').filter(l => l.includes('Sees'));
+      document.getElementById('nodeCount').textContent = lines.length || 5;
+      return;
+    }
+    document.getElementById('nodeCount').textContent = peers.length || 5;
+    const grid = document.getElementById('nodesGrid');
+    grid.innerHTML = peers.map(p => {
+      const info = nodeMap[p.peername] || { name: p.peername, flag: '🌍', role: 'Follower' };
+      const sees = (p.peers || []).length;
+      return `<div class="node-card">
+        <div class="node-header">
+          <div><span class="node-flag">${info.flag}</span> <span class="node-name">${info.name}</span></div>
+          <div class="node-status online"><div class="status-dot"></div>Online</div>
+        </div>
+        <div class="node-info">
+          Role: <span>${info.role}</span><br>
+          Cluster ID: <span>${(p.id||'').slice(0,20)}...</span><br>
+          Sees: <span>${sees} peers</span><br>
+          IPFS: <span>${(p.ipfs||{}).id ? ((p.ipfs||{}).id).slice(0,20)+'...' : 'N/A'}</span>
+        </div>
+      </div>`;
+    }).join('') || `<div class="node-card"><div class="node-info">${i18n[currentLang].loading}</div></div>`;
+  } catch(e) {
+    document.getElementById('nodesGrid').innerHTML = `<div class="node-card"><div class="node-info">${i18n[currentLang].loading}</div></div>`;
+  }
+}
+
+async function loadStorage() {
+  try {
+    const r = await fetch(API + '/api/v0/repo/stat?size-only=true', { method: 'POST' });
+    const d = await r.json();
+    const mb = (d.RepoSize / 1048576).toFixed(1);
+    document.getElementById('storageUsed').textContent = mb + ' MB';
+  } catch(e) {
+    document.getElementById('storageUsed').textContent = 'N/A';
+  }
+}
+
+// Tabs
+const tabs = document.querySelectorAll('.upload-tab');
+const fileArea = document.getElementById('fileArea');
+const htmlArea = document.getElementById('htmlArea');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const mode = tab.dataset.tab;
+    fileArea.style.display = mode === 'file' ? 'block' : 'none';
+    htmlArea.style.display = mode === 'html' ? 'block' : 'none';
+    document.getElementById('uploadResult').classList.remove('show');
+  });
+});
+
+// File upload
+const uploadBox = document.getElementById('uploadBox');
+const fileInput = document.getElementById('fileInput');
+const uploadResult = document.getElementById('uploadResult');
+const uploadText = uploadBox.querySelector('.upload-text');
+const uploadHint = uploadBox.querySelector('.upload-hint');
+
+uploadBox.addEventListener('click', () => fileInput.click());
+uploadBox.addEventListener('dragover', e => { e.preventDefault(); uploadBox.classList.add('dragover'); });
+uploadBox.addEventListener('dragleave', () => uploadBox.classList.remove('dragover'));
+uploadBox.addEventListener('drop', e => { e.preventDefault(); uploadBox.classList.remove('dragover'); if (e.dataTransfer.files[0]) uploadFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e => { if (e.target.files[0]) uploadFile(e.target.files[0]); });
+
+async function uploadFile(file) {
+  uploadResult.classList.remove('show');
+  uploadText.textContent = 'Uploading ' + file.name + '...';
+  const fd = new FormData(); fd.append('file', file);
+  try {
+    const r = await fetch(API + '/api/ipfs-upload', { method: 'POST', body: fd });
+    const d = await r.json();
+    showResult(d, file.name);
+  } catch(err) {
+    uploadText.textContent = i18n[currentLang].upload_box_text;
+    uploadResult.classList.add('show');
+    uploadResult.innerHTML = '<div style="color:var(--red)">❌ Upload failed: ' + err.message + '</div>';
+  }
+}
+
+// HTML paste upload
+document.getElementById('uploadHtml').addEventListener('click', async () => {
+  const html = document.getElementById('htmlInput').value.trim();
+  if (!html) return;
+  const blob = new Blob([html], { type: 'text/html' });
+  const file = new File([blob], 'index.html', { type: 'text/html' });
+  await uploadFile(file);
+});
+
+document.getElementById('clearHtml').addEventListener('click', () => {
+  document.getElementById('htmlInput').value = '';
+});
+
+function showResult(d, filename) {
+  uploadText.textContent = i18n[currentLang].upload_box_text;
+  uploadResult.classList.add('show');
+  const t = i18n[currentLang];
+  uploadResult.innerHTML = `
+    <div style="color:var(--green);margin-bottom:8px">✅ Upload successful!</div>
+    <div>${t.result_cid}: <a class="cid-link" href="/ipfs/${d.cid}" target="_blank">${d.cid}</a></div>
+    <div>${t.result_size}: ${d.size} bytes</div>
+    <div>${t.result_pinned}: ${d.pinned ? '✅ Yes' : '❌ No'} | ${t.result_total_pins}: ${d.totalPins}</div>
+    <div>${t.result_gateway}: <a class="cid-link" href="https://starstack.store/ipfs/${d.cid}" target="_blank">https://starstack.store/ipfs/${d.cid}</a></div>
+    <div style="margin-top:8px"><button class="btn btn-secondary" onclick="navigator.clipboard.writeText('https://starstack.store/ipfs/${d.cid}')" style="padding:6px 14px;font-size:12px">${t.result_copy}</button></div>
+  `;
+  loadPins();
+}
+
+// Init
+loadHealth();
+loadPins();
+loadCluster();
+loadStorage();
+setInterval(loadHealth, 30000);
+setInterval(loadPins, 60000);
+setInterval(loadCluster, 30000);
+</script>
+</body>
+</html>
