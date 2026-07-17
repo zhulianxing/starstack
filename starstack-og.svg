@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0e27"/>
+      <stop offset="100%" style="stop-color:#131836"/>
+    </linearGradient>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6c5ce7"/>
+      <stop offset="100%" style="stop-color:#00cec9"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="40" y="40" width="1120" height="550" rx="24" fill="none" stroke="#1f2747" stroke-width="1"/>
+  <text x="600" y="160" text-anchor="middle" font-family="system-ui" font-size="28" fill="#64748b">⭐ StarStack 星栈</text>
+  <text x="600" y="240" text-anchor="middle" font-family="system-ui" font-size="56" font-weight="800" fill="url(#g)">AI 静态网站分发层</text>
+  <text x="600" y="310" text-anchor="middle" font-family="system-ui" font-size="24" fill="#94a3b8">把 Claude Code / Codex / OpenClaw 生成的 HTML</text>
+  <text x="600" y="360" text-anchor="middle" font-family="system-ui" font-size="28" font-weight="700" fill="url(#g)">一键发布到全球 5 节点 IPFS</text>
+  <circle cx="350" cy="440" r="10" fill="#6c5ce7"/><text x="375" y="447" font-family="system-ui" font-size="18" fill="#94a3b8">零配置</text>
+  <circle cx="520" cy="440" r="10" fill="#00cec9"/><text x="545" y="447" font-family="system-ui" font-size="18" fill="#94a3b8">抗审查</text>
+  <circle cx="690" cy="440" r="10" fill="#6c5ce7"/><text x="715" y="447" font-family="system-ui" font-size="18" fill="#94a3b8">永久在线</text>
+  <text x="600" y="540" text-anchor="middle" font-family="system-ui" font-size="18" fill="#64748b">starstack.store</text>
+</svg>
