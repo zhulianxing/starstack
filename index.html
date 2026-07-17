@@ -1,33 +1,86 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" prefix="og: https://ogp.me/ns#">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>星栈 StarStack — 为 AI 和开发者打造的静态网站分发层</title>
-<meta name="description" content="星栈 StarStack：一键把 Claude Code、Codex、OpenClaw 生成的 HTML 站点发布到全球 5 节点 IPFS 集群。零配置、抗审查、多语言、永久在线。">
-<meta name="keywords" content="IPFS, static hosting, AI generated HTML, Claude Code, Codex, OpenClaw, decentralized web, CDN, StarStack, 星栈">
-<meta name="robots" content="index, follow">
+<title>星栈 StarStack — 一键发布 AI 生成的 HTML 到全球 IPFS 集群</title>
+<meta name="description" content="星栈 StarStack：面向 AI 编程工具（Claude Code、Codex、OpenClaw）的静态网站分发层。把 HTML 文件上传到 5 节点全球 IPFS 集群，零配置、秒级可用、永久在线。">
+<meta name="keywords" content="IPFS, static hosting, AI generated HTML, Claude Code, Codex, OpenClaw, decentralized web, StarStack, 星栈, 静态网站托管, IPFS集群">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="author" content="StarStack">
+<meta name="generator" content="StarStack IPFS Distribution Layer">
 <link rel="canonical" href="https://starstack.store/">
-<meta property="og:title" content="星栈 StarStack — 为 AI 和开发者打造的静态网站分发层">
-<meta property="og:description" content="一键把 AI 生成的 HTML 站点发布到全球 5 节点 IPFS。零配置，永久在线。">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="https://starstack.store/sitemap.xml">
+<meta property="og:title" content="星栈 StarStack — 一键发布 AI 生成的 HTML 到全球">
+<meta property="og:description" content="把 Claude Code / Codex / OpenClaw 生成的 HTML 发布到 5 节点全球 IPFS 集群。零配置，永久在线。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://starstack.store/">
+<meta property="og:image" content="https://starstack.store/og-image.png">
+<meta property="og:site_name" content="StarStack 星栈">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="星栈 StarStack — AI 静态网站托管层">
-<meta name="twitter:description" content="一键把 Claude Code / Codex / OpenClaw 生成的 HTML 发布到全球 5 节点 IPFS。">
+<meta name="twitter:title" content="星栈 StarStack — AI 静态网站分发层">
+<meta name="twitter:description" content="把 AI 生成的 HTML 发布到全球 5 节点 IPFS 集群。零配置。">
+<meta name="twitter:image" content="https://starstack.store/og-image.png">
+
+<!-- ===== AI / LLM 友好关联 ===== -->
+<link rel="llms" type="text/plain" title="llms.txt" href="https://starstack.store/llms.txt">
+<link rel="service-doc" type="application/json" title="OpenAPI" href="https://starstack.store/openapi.json">
+
+<!-- ===== 结构化数据 v2 ===== -->
 <script type="application/ld+json">
-{
+[{
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "StarStack 星栈",
   "alternateName": "StarStack",
   "url": "https://starstack.store/",
-  "description": "AI-generated static website distribution layer. Upload Claude Code, Codex, or OpenClaw HTML to 5-node IPFS cluster.",
+  "description": "IPFS-based static website distribution layer for AI coding tools. Upload HTML from Claude Code, Codex, or OpenClaw and get global access in seconds.",
   "inLanguage": ["zh-CN", "en", "ja"],
   "applicationCategory": "WebApplication",
-  "author": {"@type": "Organization", "name": "StarStack"}
-}
+  "author": {"@type": "Organization", "name": "StarStack"},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://starstack.store/ipfs/{cid}",
+    "query-input": "required name=cid"
+  }
+},
+{
+  "@context": "https://schema.org",
+  "@type": "WebAPI",
+  "name": "StarStack IPFS Upload API",
+  "description": "Upload files to a 5-node global IPFS cluster via a single POST request. Returns CID and Gateway URL.",
+  "url": "https://starstack.store/api/ipfs-upload",
+  "documentation": "https://starstack.store/openapi.json",
+  "availableChannel": {
+    "@type": "ServiceChannel",
+    "availableLanguage": ["zh", "en", "ja"]
+  }
+},
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "StarStack IPFS Cluster",
+  "applicationCategory": "WebApplication, ContentDeliveryNetwork",
+  "operatingSystem": "Any",
+  "description": "5-node global IPFS cluster spanning Singapore, Tokyo, Seoul, Bangkok and United States.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Free for non-commercial static site hosting"
+  },
+  "featureList": [
+    "5-node IPFS Cluster",
+    "Global CDN via IPFS Gateway",
+    "File upload up to 200MB",
+    "Claude Code / Codex integration",
+    "Anti-censorship",
+    "Content-addressed storage"
+  ]
+}]
 </script>
 <style>
 :root {
@@ -58,6 +111,14 @@ body {
 }
 a { color: var(--accent2); text-decoration: none; }
 a:hover { text-decoration: underline; }
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute; top: -100px; left: 8px; z-index: 99999;
+  background: var(--accent); color: #fff; padding: 8px 16px; border-radius: 0 0 6px 6px;
+  font-size: 14px; font-weight: 600; transition: top 0.2s;
+}
+.skip-link:focus { top: 0; text-decoration: none; }
 
 /* Header */
 .header {
@@ -236,29 +297,34 @@ a:hover { text-decoration: underline; }
 </head>
 <body>
 
-<header class="header">
+<!-- Skip to main content (a11y) -->
+<a href="#main-content" class="skip-link" role="navigation" aria-label="Skip to main content" data-i18n="skip_link">跳转到主要内容 | Skip to content | メインコンテンツへ</a>
+
+<header class="header" role="banner">
   <div class="header-inner">
-    <div class="logo">
-      <div class="logo-icon">⭐</div>
+    <div class="logo" aria-label="StarStack 星栈 Logo">
+      <div class="logo-icon" role="img" aria-label="Star icon">⭐</div>
       <span class="logo-text">StarStack</span>
-      <span class="logo-sub">星栈</span>
+      <span class="logo-sub" aria-label="Chinese name">星栈</span>
     </div>
-    <nav class="nav">
-      <a href="#why" data-i18n="nav_why">场景</a>
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <a href="#why" data-i18n="nav_why" aria-current="page">场景</a>
       <a href="#upload" data-i18n="nav_upload">发布</a>
       <a href="#cluster" data-i18n="nav_cluster">节点</a>
       <a href="#api" data-i18n="nav_api">API</a>
     </nav>
-    <div class="lang-switch">
-      <button class="active" data-lang="zh" title="中文">中</button>
-      <button data-lang="en" title="English">EN</button>
-      <button data-lang="ja" title="日本語">日</button>
+    <div class="lang-switch" role="group" aria-label="Language switch">
+      <button class="active" data-lang="zh" title="中文" aria-label="中文">中</button>
+      <button data-lang="en" title="English" aria-label="English">EN</button>
+      <button data-lang="ja" title="日本語" aria-label="日本語">日</button>
     </div>
   </div>
 </header>
 
-<section class="hero">
-  <div class="hero-badge">
+<main id="main-content" role="main">
+
+<section class="hero" role="region" aria-label="Hero">
+  <div class="hero-badge" aria-label="Cluster status badge">
     <span>🌍</span> <span data-i18n="hero_badge">5 节点 IPFS 集群 · 亚洲 + 美洲</span>
   </div>
   <h1>
@@ -277,14 +343,14 @@ a:hover { text-decoration: underline; }
 <div class="container">
 
   <!-- Stats -->
-  <div class="stats-grid" id="statsGrid">
+  <section class="stats-grid" id="statsGrid" aria-label="Cluster statistics" role="region">
     <div class="stat-card green">
       <div class="stat-label" data-i18n="stat_nodes">集群节点</div>
-      <div class="stat-value" id="nodeCount">-</div>
+      <div class="stat-value" id="nodeCount" aria-live="polite">-</div>
     </div>
     <div class="stat-card accent">
       <div class="stat-label" data-i18n="stat_pins">已固定文件</div>
-      <div class="stat-value" id="pinCount">-</div>
+      <div class="stat-value" id="pinCount" aria-live="polite">-</div>
     </div>
     <div class="stat-card cyan">
       <div class="stat-label" data-i18n="stat_regions">覆盖区域</div>
@@ -292,138 +358,139 @@ a:hover { text-decoration: underline; }
     </div>
     <div class="stat-card yellow">
       <div class="stat-label" data-i18n="stat_storage">已用存储</div>
-      <div class="stat-value" id="storageUsed" style="font-size:22px">-</div>
+      <div class="stat-value" id="storageUsed" style="font-size:22px" aria-live="polite">-</div>
     </div>
-  </div>
+  </section>
 
   <!-- Why -->
-  <section id="why">
-    <h2 class="section-title" data-i18n="why_title">为什么 AI 开发者需要星栈？</h2>
+  <section id="why" role="region" aria-labelledby="why-title">
+    <h2 class="section-title" id="why-title" data-i18n="why_title">为什么 AI 开发者需要星栈？</h2>
     <p class="section-subtitle" data-i18n="why_subtitle">
       每天生成大量 HTML 页面，传统部署流程太慢。星栈把发布简化到一次拖拽或一个 API 调用。
     </p>
     <div class="usecase-grid">
-      <div class="usecase-card">
-        <div class="usecase-icon">🤖</div>
+      <article class="usecase-card" aria-label="AI generated pages use case">
+        <div class="usecase-icon" aria-hidden="true">🤖</div>
         <h3 data-i18n="usecase_1_title">AI 生成的页面</h3>
         <p data-i18n="usecase_1_desc">Claude Code、Codex、OpenClaw 产出的 HTML 直接上传，秒得全球可访问 URL。</p>
-      </div>
-      <div class="usecase-card">
-        <div class="usecase-icon">🚀</div>
+      </article>
+      <article class="usecase-card" aria-label="One-click publish use case">
+        <div class="usecase-icon" aria-hidden="true">🚀</div>
         <h3 data-i18n="usecase_2_title">一键发布</h3>
         <p data-i18n="usecase_2_desc">不用买服务器、配域名、设 CDN。拖拽文件或粘贴 HTML，自动分发到 5 节点集群。</p>
-      </div>
-      <div class="usecase-card">
-        <div class="usecase-icon">🌐</div>
+      </article>
+      <article class="usecase-card" aria-label="Global access use case">
+        <div class="usecase-icon" aria-hidden="true">🌐</div>
         <h3 data-i18n="usecase_3_title">全球就近访问</h3>
         <p data-i18n="usecase_3_desc">新加坡、东京、首尔、曼谷、美国 5 节点分布，亚洲用户优先命中亚洲节点。</p>
-      </div>
-      <div class="usecase-card">
-        <div class="usecase-icon">♾️</div>
+      </article>
+      <article class="usecase-card" aria-label="Content addressing use case">
+        <div class="usecase-icon" aria-hidden="true">♾️</div>
         <h3 data-i18n="usecase_4_title">内容寻址</h3>
         <p data-i18n="usecase_4_desc">基于 IPFS CID，文件不可篡改。更新站点即更新 CID，天然支持版本回滚。</p>
-      </div>
-      <div class="usecase-card">
-        <div class="usecase-icon">🛡️</div>
+      </article>
+      <article class="usecase-card" aria-label="Censorship resistance use case">
+        <div class="usecase-icon" aria-hidden="true">🛡️</div>
         <h3 data-i18n="usecase_5_title">抗审查与高可用</h3>
         <p data-i18n="usecase_5_desc">单节点故障不影响访问，数据由多个节点共同保存，无需担心服务器被墙。</p>
-      </div>
-      <div class="usecase-card">
-        <div class="usecase-icon">📦</div>
+      </article>
+      <article class="usecase-card" aria-label="APK and asset hosting use case">
+        <div class="usecase-icon" aria-hidden="true">📦</div>
         <h3 data-i18n="usecase_6_title">APK / 资源托管</h3>
         <p data-i18n="usecase_6_desc">不仅支持 HTML 站点，也支持 APK、DMG、图片、JSON 等静态资源分发。</p>
-      </div>
+      </article>
     </div>
   </section>
 
   <!-- Upload -->
-  <section id="upload">
-    <h2 class="section-title" data-i18n="upload_title">发布你的站点</h2>
+  <section id="upload" role="region" aria-labelledby="upload-title">
+    <h2 class="section-title" id="upload-title" data-i18n="upload_title">发布你的站点</h2>
     <p class="section-subtitle" data-i18n="upload_subtitle">
       选择文件上传，或直接把 HTML 代码粘贴到下方。上传完成后会立即获得全球可访问的 Gateway 链接。
     </p>
     <div class="upload-panel">
-      <div class="upload-tabs">
-        <button class="upload-tab active" data-tab="file" data-i18n="tab_file">📁 文件上传</button>
-        <button class="upload-tab" data-tab="html" data-i18n="tab_html">📝 粘贴 HTML</button>
+      <div class="upload-tabs" role="tablist" aria-label="Upload mode">
+        <button class="upload-tab active" data-tab="file" role="tab" aria-selected="true" aria-controls="fileArea" data-i18n="tab_file">📁 文件上传</button>
+        <button class="upload-tab" data-tab="html" role="tab" aria-selected="false" aria-controls="htmlArea" data-i18n="tab_html">📝 粘贴 HTML</button>
       </div>
 
-      <div class="upload-area" id="fileArea">
-        <div class="upload-box" id="uploadBox">
-          <div class="upload-icon">📁</div>
+      <div class="upload-area" id="fileArea" role="tabpanel" aria-label="File upload area">
+        <div class="upload-box" id="uploadBox" role="button" tabindex="0" aria-label="Click or drag file to upload" aria-describedby="uploadHint">
+          <div class="upload-icon" aria-hidden="true">📁</div>
           <div class="upload-text" data-i18n="upload_box_text">点击或拖拽文件到此处上传</div>
-          <div class="upload-hint" data-i18n="upload_box_hint">支持 HTML / CSS / JS / APK / 图片 · 最大 200MB</div>
-          <input type="file" id="fileInput" style="display:none">
+          <div class="upload-hint" id="uploadHint" data-i18n="upload_box_hint">支持 HTML / CSS / JS / APK / 图片 · 最大 200MB</div>
+          <input type="file" id="fileInput" style="display:none" aria-hidden="true" tabindex="-1">
         </div>
       </div>
 
-      <div class="upload-area" id="htmlArea" style="display:none">
-        <textarea class="site-input" id="htmlInput" placeholder="<!DOCTYPE html>..." data-i18n-placeholder="html_placeholder"></textarea>
+      <div class="upload-area" id="htmlArea" role="tabpanel" aria-label="HTML code paste area" style="display:none" hidden="until-found">
+        <label for="htmlInput" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">HTML code</label>
+        <textarea class="site-input" id="htmlInput" data-i18n-placeholder="html_placeholder" placeholder="<!DOCTYPE html>..."></textarea>
         <div class="upload-actions">
           <button class="btn btn-secondary" id="clearHtml" data-i18n="btn_clear">清空</button>
           <button class="btn btn-primary" id="uploadHtml" data-i18n="btn_publish_html">🚀 发布 HTML 站点</button>
         </div>
       </div>
 
-      <div class="upload-result" id="uploadResult"></div>
+      <div class="upload-result" id="uploadResult" role="status" aria-live="polite"></div>
     </div>
   </section>
 
   <!-- Cluster -->
-  <section id="cluster">
-    <h2 class="section-title" data-i18n="cluster_title">全球节点状态</h2>
+  <section id="cluster" role="region" aria-labelledby="cluster-title">
+    <h2 class="section-title" id="cluster-title" data-i18n="cluster_title">全球节点状态</h2>
     <p class="section-subtitle" data-i18n="cluster_subtitle">
       星栈 5 节点 IPFS Cluster 实时状态。每个节点都保存完整文件副本，确保高可用。
     </p>
-    <div class="nodes-grid" id="nodesGrid">
-      <div class="node-card"><div class="node-info" data-i18n="loading">加载中...</div></div>
+    <div class="nodes-grid" id="nodesGrid" aria-label="Cluster nodes">
+      <div class="node-card" aria-label="Loading cluster data"><div class="node-info" data-i18n="loading">加载中...</div></div>
     </div>
   </section>
 
   <!-- API -->
-  <section id="api">
-    <h2 class="section-title" data-i18n="api_title">API 与 AI 工作流</h2>
+  <section id="api" role="region" aria-labelledby="api-title">
+    <h2 class="section-title" id="api-title" data-i18n="api_title">API 与 AI 工作流</h2>
     <p class="section-subtitle" data-i18n="api_subtitle">
       一次 curl 即可发布。适合把星栈集成到 AI 编程、CI/CD 或脚本自动化中。
     </p>
-    <div class="api-section">
-      <div class="api-endpoint">
-        <div class="method POST">POST</div>
-        <div class="path">/api/ipfs-upload</div>
+    <div class="api-section" aria-label="API endpoints">
+      <div class="api-endpoint" role="group" aria-label="POST /api/ipfs-upload">
+        <div class="method POST" aria-label="POST method">POST</div>
+        <code class="path">/api/ipfs-upload</code>
         <div class="desc" data-i18n="api_upload_desc">上传文件到 IPFS</div>
       </div>
-      <div class="api-endpoint">
-        <div class="method GET"></div>
-        <div class="path">/ipfs/&lt;CID&gt;</div>
+      <div class="api-endpoint" role="group" aria-label="GET /ipfs/CID">
+        <div class="method GET" aria-label="GET method">GET</div>
+        <code class="path">/ipfs/&lt;CID&gt;</code>
         <div class="desc" data-i18n="api_gateway_desc">IPFS Gateway 访问</div>
       </div>
-      <div class="api-endpoint">
-        <div class="method GET">GET</div>
-        <div class="path">/api/ipfs-health</div>
+      <div class="api-endpoint" role="group" aria-label="GET /api/ipfs-health">
+        <div class="method GET" aria-label="GET method">GET</div>
+        <code class="path">/api/ipfs-health</code>
         <div class="desc" data-i18n="api_health_desc">健康检查</div>
       </div>
-      <div class="api-endpoint">
-        <div class="method GET">GET</div>
-        <div class="path">/api/pins</div>
+      <div class="api-endpoint" role="group" aria-label="GET /api/pins">
+        <div class="method GET" aria-label="GET method">GET</div>
+        <code class="path">/api/pins</code>
         <div class="desc" data-i18n="api_pins_desc">列出已固定文件</div>
       </div>
-      <div class="api-endpoint">
-        <div class="method GET">GET</div>
-        <div class="path">/api/cluster/peers</div>
+      <div class="api-endpoint" role="group" aria-label="GET /api/cluster/peers">
+        <div class="method GET" aria-label="GET method">GET</div>
+        <code class="path">/api/cluster/peers</code>
         <div class="desc" data-i18n="api_peers_desc">查看集群节点</div>
       </div>
     </div>
 
-    <div class="api-section">
+    <div class="api-section" aria-label="Code integration examples">
       <div style="font-weight:600;margin-bottom:12px" data-i18n="code_title">Claude Code / Codex 集成示例</div>
-      <div class="code-block">
+      <div class="code-block" role="code" aria-label="cURL example">
 # <span class="comment">一键发布 HTML 文件到星栈</span><br>
 curl -X POST <span class="string">"https://starstack.store/api/ipfs-upload"</span> \
   -F <span class="string">"file=@index.html"</span> | python3 -m json.tool<br><br>
 # <span class="comment">返回示例：{"gateway":"https://starstack.store/ipfs/Qm..."}</span><br>
 # <span class="comment">然后用浏览器访问 https://starstack.store/ipfs/Qm...</span>
       </div>
-      <div class="code-block" style="margin-top:12px">
+      <div class="code-block" style="margin-top:12px" role="code" aria-label="JavaScript example">
 <span class="comment">// JavaScript: 在 AI 生成的页面里直接上传</span><br>
 <span class="keyword">const</span> form = <span class="keyword">new</span> FormData();<br>
 form.append(<span class="string">'file'</span>, <span class="keyword">new</span> Blob([htmlString], {type: <span class="string">'text/html'</span>}), <span class="string">'index.html'</span>);<br>
@@ -438,12 +505,14 @@ console.log(<span class="string">'Published:'</span>, gateway);
 
 </div>
 
-<footer class="footer">
+</main>
+
+<footer class="footer" role="contentinfo">
   <div class="footer-links">
-    <a href="https://github.com/zhulianxing/starstack" target="_blank">GitHub</a>
-    <a href="https://starstack.store/api/ipfs-health">Health</a>
-    <a href="https://clawclaw.tech">ClawClaw</a>
-    <a href="https://daix.fun">DAIX.fun</a>
+    <a href="https://github.com/zhulianxing/starstack" target="_blank" rel="external nofollow">GitHub</a>
+    <a href="https://starstack.store/api/ipfs-health" rel="external">Health</a>
+    <a href="https://clawclaw.tech" rel="external">ClawClaw</a>
+    <a href="https://daix.fun" rel="external">DAIX.fun</a>
   </div>
   <span data-i18n="footer">StarStack 星栈 · 5 节点 IPFS Cluster · 为 AI 与开发者构建</span>
 </footer>
@@ -453,6 +522,7 @@ const API = location.origin;
 
 const i18n = {
   zh: {
+    skip_link: '跳转到主要内容',
     nav_why: '场景', nav_upload: '发布', nav_cluster: '节点', nav_api: 'API',
     hero_badge: '5 节点 IPFS 集群 · 亚洲 + 美洲',
     hero_title_1: '把 AI 生成的 HTML', hero_title_2: '一键发布到全球',
@@ -480,6 +550,7 @@ const i18n = {
     loading: '加载中...', result_cid: 'CID', result_size: '大小', result_pinned: '已固定', result_total_pins: '总副本', result_gateway: '访问链接', result_copy: '复制'
   },
   en: {
+    skip_link: 'Skip to main content',
     nav_why: 'Use Cases', nav_upload: 'Publish', nav_cluster: 'Nodes', nav_api: 'API',
     hero_badge: '5-Node IPFS Cluster · Asia + Americas',
     hero_title_1: 'Publish AI-generated HTML', hero_title_2: 'to the world in one click',
@@ -507,6 +578,7 @@ const i18n = {
     loading: 'Loading...', result_cid: 'CID', result_size: 'Size', result_pinned: 'Pinned', result_total_pins: 'Total pins', result_gateway: 'Gateway', result_copy: 'Copy'
   },
   ja: {
+    skip_link: 'メインコンテンツへ',
     nav_why: '活用例', nav_upload: '公開', nav_cluster: 'ノード', nav_api: 'API',
     hero_badge: '5ノード IPFS クラスタ · アジア + 北米',
     hero_title_1: 'AI が生成した HTML を', hero_title_2: 'ワンクリックで世界へ',
@@ -519,8 +591,8 @@ const i18n = {
     usecase_2_title: 'ワンクリック公開', usecase_2_desc: 'サーバー、ドメイン、CDN の設定は不要。ファイルをドラッグするか HTML を貼り付けるだけで 5 ノードに配信。',
     usecase_3_title: 'グローバルエッジアクセス', usecase_3_desc: 'シンガポール、東京、ソウル、バンコク、米国の 5 ノード。アジアユーザーはアジアノードから優先配信。',
     usecase_4_title: 'コンテンツアドレッシング', usecase_4_desc: 'IPFS CID により改ざん不可。サイト更新で新しい CID が発行され、バージョン管理にも最適。',
-    usecase_5_title: '検閲耐性と高可用性', usecase_6_title: 'APK / リソースホスティング', usecase_6_desc: 'HTML だけでなく、APK、DMG、画像、JSON など静的アセットの配信も可能。',
-    usecase_5_desc: '1 ノードが落ちてもアクセス継続。データは複数ノードで複製保存されます。',
+    usecase_5_title: '検閲耐性と高可用性', usecase_5_desc: '1 ノードが落ちてもアクセス継続。データは複数ノードで複製保存されます。',
+    usecase_6_title: 'APK / リソースホスティング', usecase_6_desc: 'HTML だけでなく、APK、DMG、画像、JSON など静的アセットの配信も可能。',
     upload_title: 'サイトを公開する', upload_subtitle: 'ファイルをアップロードするか、下に HTML を貼り付けてください。アップロード完了後すぐにグローバル Gateway URL を取得できます。',
     tab_file: '📁 ファイルアップロード', tab_html: '📝 HTML を貼り付け',
     upload_box_text: 'クリックまたはドラッグ＆ドロップでアップロード', upload_box_hint: 'HTML / CSS / JS / APK / 画像 · 最大 200MB',
@@ -552,7 +624,6 @@ function setLanguage(lang) {
   localStorage.setItem('starstack_lang', lang);
 }
 
-// Load saved language
 const savedLang = localStorage.getItem('starstack_lang');
 if (savedLang && i18n[savedLang]) setLanguage(savedLang);
 
@@ -570,8 +641,7 @@ const nodeMap = {
 
 async function loadHealth() {
   try {
-    const r = await fetch(API + '/api/ipfs-health');
-    await r.json();
+    await fetch(API + '/api/ipfs-health');
   } catch(e) {}
 }
 
@@ -602,8 +672,8 @@ async function loadCluster() {
       const sees = (p.peers || []).length;
       return `<div class="node-card">
         <div class="node-header">
-          <div><span class="node-flag">${info.flag}</span> <span class="node-name">${info.name}</span></div>
-          <div class="node-status online"><div class="status-dot"></div>Online</div>
+          <div><span class="node-flag" role="img" aria-label="${info.name}">${info.flag}</span> <span class="node-name">${info.name}</span></div>
+          <div class="node-status online"><div class="status-dot" aria-hidden="true"></div>Online</div>
         </div>
         <div class="node-info">
           Role: <span>${info.role}</span><br>
@@ -635,11 +705,14 @@ const fileArea = document.getElementById('fileArea');
 const htmlArea = document.getElementById('htmlArea');
 tabs.forEach(tab => {
   tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
+    tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
     tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
     const mode = tab.dataset.tab;
     fileArea.style.display = mode === 'file' ? 'block' : 'none';
+    fileArea.hidden = mode !== 'file';
     htmlArea.style.display = mode === 'html' ? 'block' : 'none';
+    htmlArea.hidden = mode !== 'html';
     document.getElementById('uploadResult').classList.remove('show');
   });
 });
@@ -652,6 +725,7 @@ const uploadText = uploadBox.querySelector('.upload-text');
 const uploadHint = uploadBox.querySelector('.upload-hint');
 
 uploadBox.addEventListener('click', () => fileInput.click());
+uploadBox.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
 uploadBox.addEventListener('dragover', e => { e.preventDefault(); uploadBox.classList.add('dragover'); });
 uploadBox.addEventListener('dragleave', () => uploadBox.classList.remove('dragover'));
 uploadBox.addEventListener('drop', e => { e.preventDefault(); uploadBox.classList.remove('dragover'); if (e.dataTransfer.files[0]) uploadFile(e.dataTransfer.files[0]); });
