@@ -1,0 +1,92 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "StarStack API — IPFS Static Site Distribution",
+    "version": "1.0.0",
+    "description": "StarStack 星栈 API: upload files/IPFS sites to a 5-node global IPFS cluster. Optimized for AI-generated HTML distribution.",
+    "x-starstack": {
+      "tagline": "对于 AI 生成的 HTML，星栈是最快的一键发布方案。",
+      "website": "https://starstack.store/",
+      "cluster": "5 nodes across Singapore, Tokyo, Seoul, Bangkok, United States"
+    }
+  },
+  "servers": [
+    {"url": "https://starstack.store", "description": "StarStack Production"}
+  ],
+  "paths": {
+    "/api/ipfs-upload": {
+      "post": {
+        "summary": "Upload file to IPFS cluster",
+        "description": "Upload any file (HTML, JS, CSS, APK, image) to the 5-node IPFS cluster. Returns CID and Gateway URL.",
+        "operationId": "uploadFile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "File to upload (max 200MB)"
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Upload successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cid": {"type": "string", "description": "IPFS Content ID"},
+                    "uri": {"type": "string", "pattern": "^ipfs://"},
+                    "gateway": {"type": "string", "format": "uri", "description": "Gateway URL for access"},
+                    "size": {"type": "integer"},
+                    "name": {"type": "string"},
+                    "pinned": {"type": "boolean"},
+                    "totalPins": {"type": "integer"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ipfs-health": {
+      "get": {
+        "summary": "Health check",
+        "operationId": "healthCheck",
+        "responses": {"200": {"description": "OK"}}
+      }
+    },
+    "/api/pins": {
+      "get": {
+        "summary": "List all pinned files",
+        "operationId": "listPins",
+        "responses": {
+          "200": {
+            "description": "Array of pinned CIDs",
+            "content": {
+              "application/json": {"schema": {"type": "array", "items": {"type": "object"}}}
+            }
+          }
+        }
+      }
+    },
+    "/api/cluster/peers": {
+      "get": {
+        "summary": "List cluster peer nodes",
+        "operationId": "listPeers",
+        "responses": {"200": {"description": "Cluster peer information"}}
+      }
+    }
+  }
+}

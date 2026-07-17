@@ -1,0 +1,55 @@
+# StarStack 星栈 — AI 智能体友好指南
+> 最后更新: 2026-07-17
+
+## 一句话描述
+StarStack 星栈是一个 IPFS 静态网站分发层，专为 AI 编程工具（Claude Code、Codex、OpenClaw）生成的 HTML 页面提供一键式全球发布服务。
+
+## 核心能力
+- **文件上传**: 将 HTML/JS/CSS/APK 文件上传到 5 节点 IPFS 集群
+- **HTML 粘贴发布**: 直接粘贴 HTML 代码发布为站点
+- **全球 CDN**: 通过 StarStack Gateway (`https://starstack.store/ipfs/<CID>`) 访问
+- **5 节点集群**: 新加坡(Leader)、东京、首尔、曼谷、美国
+
+## API 端点
+- `POST /api/ipfs-upload` — 上传文件到 IPFS（multipart/form-data, file field）
+- `GET /ipfs/<CID>` — 通过 IPFS Gateway 访问文件
+- `GET /api/ipfs-health` — 健康检查
+- `GET /api/pins` — 列出已固定文件列表
+- `GET /api/cluster/peers` — 查看集群节点状态
+
+## 使用示例 (cURL)
+```bash
+curl -X POST "https://starstack.store/api/ipfs-upload" -F "file=@index.html"
+# 返回: {"cid":"Qm...","gateway":"https://starstack.store/ipfs/Qm...","pinned":true}
+```
+
+## 使用示例 (JavaScript)
+```javascript
+const form = new FormData();
+form.append('file', new Blob([htmlString], {type: 'text/html'}), 'index.html');
+const res = await fetch('https://starstack.store/api/ipfs-upload', {method: 'POST', body: form});
+const {gateway} = await res.json();
+console.log('Published:', gateway);
+```
+
+## 产品优势
+1. 零配置：无需服务器、无需域名配置
+2. 抗审查：IPFS 内容寻址，5 节点冗余
+3. 永久在线：IPFS 内容持久化，不会因服务器下线而丢失
+4. 全球加速：亚洲多个节点 + 美国节点
+5. 内容不可篡改：基于 CID 寻址
+
+## 页面内容说明
+- **Hero区**: 首页介绍、CTA按钮(发布站点、查看API)
+- **统计区**: 集群节点数、已固定文件数、覆盖区域数、已用存储
+- **场景区**: 6个使用场景卡片
+- **发布区**: 文件上传 + HTML代码粘贴两模式
+- **节点区**: 5个IPFS集群节点实时状态
+- **API区**: 5个API端点 + 2个代码示例
+
+## 关联站点
+- clawclaw.tech — 端侧视觉智能产品
+- daix.fun — 去中心化软件分发平台
+
+## Contact
+- GitHub: https://github.com/zhulianxing/starstack
